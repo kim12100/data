@@ -1,0 +1,70 @@
+---
+title: "lab6_Woocheol Kim"
+author: "Woocheol Kim"
+date: "10/25/2019"
+output: 
+  html_document: 
+    highlight: espresso
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, eval = TRUE, fig.width = 6.5, fig.height = 4.5)
+```
+
+## R Markdown
+
+```{r q2}
+library(tidyverse)
+library(rio)
+library(here)
+```
+
+```{r q3, echo = FALSE}
+library(tidyverse)
+library(rio)
+library(here)
+library(ggplot2)
+here("data")
+ecls_k <- import(here("data", "ecls-k_samp.sav")) 
+ecls_k_character <- ecls_k %>%  
+  characterize() 
+
+ecls_k_character %>%
+  filter(ethnic == "BLACK OR AFRICAN AMERICAN, NON-HISPANIC" | ethnic == "HISPANIC, RACE NOT SPECIFIED" | ethnic == "HISPANIC, RACE SPECIFIED" | ethnic == "WHITE, NON-HISPANIC") %>% 
+  ggplot() + 
+   geom_point(aes(x = T1MSCALE, y = T2MSCALE)) +
+   geom_smooth(method = lm, aes(x = T1MSCALE, y = T2MSCALE, color = school_type)) +
+   facet_wrap(~ethnic) +
+   theme_minimal() +
+   labs(x = "t1mscale", y = "t2mscale")
+
+```
+
+```{r q4}
+ecls_k <- import(here("data", "ecls-k_samp.dta"))
+eclsk <- ecls_k
+t1mean <- mean(eclsk$T1MSCALE, na.rm = TRUE)
+t1sd <- sd(eclsk$T1MSCALE, na.rm = TRUE)
+t2mean <- mean(eclsk$T2MSCALE, na.rm = TRUE)
+t2sd <- sd(eclsk$T2MSCALE, na.rm = TRUE)
+```
+
+Q4) t1mscale is `r t1mean/t1sd` while t2mscale is `r t2mean/t2sd`. The difference between the two means is `r t2mean-t1mean`. 
+
+```{r q5}
+# We will use "here" package to load and access data. Follow the next steps. 
+
+#library(here) 
+#list.files(here("data")) 
+# It means list files in data folder you create. 
+
+#In the process of loading data, "rio" packages helps us import and export any type of file. For example, 
+
+#library(rio)
+#president <- import(here("data", "president.csv"))
+#export(socio_economic, here("data", "socioeconomic.sav"))
+
+# It really helps you reproduce what others have done because you can import and export any kind of file. Also, with echo chunk option(echo = TRUE), you are able to see their coding and then repeat their analysis as they do. 
+```
+
+
